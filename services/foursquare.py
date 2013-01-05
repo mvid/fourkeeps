@@ -119,6 +119,6 @@ def retrieve_venue(venue):
 
 def venue_owner(game_id, venue_id):
   return db.users.find_one({"game_id": game_id,
-                            "owned_venue_ids": {"$in": venue_id}})
+                            "owned_venue_ids": venue_id})
 
 application = app
