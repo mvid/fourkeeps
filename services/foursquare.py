@@ -5,6 +5,8 @@ import bottle
 import requests
 from services.mongo import db
 import json
+from util import views
+from pymongo import objectid
 
 app = bottle.Bottle()
 
@@ -23,11 +25,28 @@ def oauth_endpoint():
   user_request = requests.get("https://api.foursquare.com/v2/users/self", params={"oauth_token": token})
   user = user_request.json()['response']['user']
 
-  users = db.users
-  users.insert({"foursquare_token": token,
-                "foursquare_id": user['id'],
-                "foursquare_contact": user['contact'],
-                "owned_venue_ids": []})
+  user_id = db.users.insert({"foursquare_token": token,
+                             "foursquare_id": user['id'],
+                             "name": user['firstName'] + ' ' + user['lastName'],
+                             "foursquare_contact": user['contact'],
+                             "owned_venue_ids": []})
+
+  if game = fetch_game_for_user(user_id):
+    # All set, say thanks
+    game_users = db.users.find({'_id': game['user_ids']}, fields=['name'])
+    return views.render_view('thanks', {'name': user['firstName'], 'users': game_users})
+  else:
+    # Make a new game
+    game_id = objectid.ObjectId()
+    return views.render_view('create_game', {
+      'name': user['firstName'],
+      'game_id': str(game_id),
+      'base_url': environ['BASE_URL']
+      })
+
+def fetch_game_for_user(user_id):
+  return db.games.find_one({'user_ids': user_id})
+
 
 @app.post("/push")
 def handle_checkin():
