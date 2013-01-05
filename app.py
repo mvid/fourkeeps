@@ -1,7 +1,7 @@
 import bottle
 import os
+from services import foursquare
 import pystache
-from services import venmo, foursquare
 
 app = bottle.Bottle()
 views = {}
@@ -30,8 +30,10 @@ for (dirpath, _, filenames) in os.walk('views'):
     if name.endswith('.stache'): name = name[0:len(name)-7]
     views[name] = pystache.parse(unicode(view))
 
-app.mount("/venmo", venmo.application)
+# service points
 app.mount("/foursquare", foursquare.application)
+
+bottle.debug()
 
 port = os.environ.get('PORT', '3000')
 app.run(host='0.0.0.0', port=port)
