@@ -32,8 +32,6 @@ def join_game(game_id):
 # service points
 app.mount("/foursquare", foursquare.application)
 
-bottle.debug()
-
 port = os.environ.get('PORT', '3000')
 app.run(host='0.0.0.0', port=port)
 
