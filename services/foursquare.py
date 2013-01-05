@@ -29,6 +29,9 @@ def oauth_endpoint():
                               "redirect_uri": environ['FOURSQUARE_REDIRECT_URI'],
                               "code": code})
 
+  if token_request.json().get('error'):
+    return views.render_view('error', {'error': 'Failed to authenticate with foursquare.'})
+
   token = token_request.json()['access_token']
 
   user_request = requests.get("https://api.foursquare.com/v2/users/self", params={"oauth_token": token})
