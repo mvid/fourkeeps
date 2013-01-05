@@ -1,3 +1,4 @@
+import logging
 from os import environ
 
 import bottle
@@ -27,5 +28,18 @@ def oauth_endpoint():
   users.insert({"foursquare_token": token,
                 "foursquare_id": user['id'],
                 "foursquare_contact": user['contact']})
+
+@app.post("/push")
+def handle_checkin():
+  push = bottle.request.json
+  if push['secret'] != environ['FOURSQUARE_PUSH_SECRET']:
+    return
+
+  checkin = push['checkin']
+  user_id = checkin['user']['id']
+  venue_id = checkin['venue']['id']
+
+  logging.info("user %s venue %s", user_id, venue_id)
+
 
 application = app

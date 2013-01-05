@@ -36,7 +36,9 @@ nosetests.xml
 
 # jetbrains
 .idea
-<<<<<<< HEAD
 
 # virtualenv
 venv
+
+# custom
+runapp
