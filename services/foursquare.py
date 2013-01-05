@@ -102,7 +102,8 @@ def handle_checkin():
 def write_to_checkin(checkin_id, user, text, url=None):
   payload = {"text": text,
              "url": url,
-             "oauth_token": user['foursquare_token']}
+             "oauth_token": user['foursquare_token'],
+             "v": "20130105"}
   response = requests.post("https://api.foursquare.com/v2/checkins/%s/reply" % checkin_id,
                           params=payload)
   print response.url, response.text
