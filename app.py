@@ -7,7 +7,7 @@ app = bottle.Bottle()
 def index():
   return "FourKeeps. Bitch."
 
-
+app.mount()
 
 port = os.environ.get('PORT', '3000')
 app.run(host='0.0.0.0', port=port)
