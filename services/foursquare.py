@@ -27,7 +27,7 @@ def oauth_endpoint():
   users.insert({"foursquare_token": token,
                 "foursquare_id": user['id'],
                 "foursquare_contact": user['contact'],
-                "owned_venues": []})
+                "owned_venue_ids": []})
 
 @app.post("/push")
 def handle_checkin():
@@ -36,10 +36,14 @@ def handle_checkin():
     return
 
   checkin = json.loads(push['checkin'])
-  user_id = checkin['user']['id']
-  venue_id = checkin['venue']['id']
+  foursquare_user = checkin['user']
+  foursquare_venue = checkin['venue']
 
-  logging.info("user %s venue %s", user_id, venue_id)
+
+
+  retrieved_venue = retrieve_venue(foursquare_venue)
+  owner = venue_owner()
+
 
 def retrieve_venue(venue):
   existing_venue = db.venues.find_one({"foursquare_id": venue['id']})
@@ -50,5 +54,8 @@ def retrieve_venue(venue):
                            "foursquare_name": venue['name']})
     return id
 
+def venue_owner(game_id, venue_id):
+  return db.users.find_one({"game_id": game_id,
+                            "owned_venue_ids": {"$in": venue_id}})
 
 application = app
