@@ -38,12 +38,16 @@ def oauth_endpoint():
   user_request = requests.get("https://api.foursquare.com/v2/users/self", params={"oauth_token": token})
   user = user_request.json()['response']['user']
 
-  user_id = db.users.insert({"foursquare_token": token,
-                             "foursquare_id": user['id'],
-                             "name": user['firstName'] + ' ' + user['lastName'],
-                             "foursquare_contact": user['contact'],
-                             "game_id": game_id,
-                             "owned_venue_ids": []})
+  user_id = None
+  if not db.users.find_one({"foursquare_id": user['id']}):
+    user_id = db.users.insert({"foursquare_token": token,
+                               "foursquare_id": user['id'],
+                               "name": user['firstName'] + ' ' + user['lastName'],
+                               "foursquare_contact": user['contact'],
+                               "game_id": game_id,
+                               "owned_venue_ids": []})
+  else:
+    return views.render_view('error', {'error': 'User already exists!'})
 
   # Make a new game
   if game_found:
