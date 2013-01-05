@@ -4,6 +4,7 @@ from os import environ
 import bottle
 import requests
 from services.mongo import db
+import json
 
 app = bottle.Bottle()
 
@@ -30,11 +31,11 @@ def oauth_endpoint():
 
 @app.post("/push")
 def handle_checkin():
-  push = bottle.request.json
+  push = bottle.request.params
   if push['secret'] != environ['FOURSQUARE_PUSH_SECRET']:
     return
 
-  checkin = push['checkin']
+  checkin = json.loads(push['checkin'])
   user_id = checkin['user']['id']
   venue_id = checkin['venue']['id']
 
