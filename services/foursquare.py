@@ -25,7 +25,8 @@ def oauth_endpoint():
   users = db.users
   users.insert({"foursquare_token": token,
                 "foursquare_id": user['id'],
-                "foursquare_contact": user['contact']})
+                "foursquare_contact": user['contact'],
+                "owned_venues": []})
 
 @app.post("/push")
 def handle_checkin():
@@ -39,13 +40,14 @@ def handle_checkin():
 
   logging.info("user %s venue %s", user_id, venue_id)
 
-def retrieve_venue(venue_id):
-
-  venue = db.venues.find_one({"foursquare_id": venue_id})
-  if venue:
-    pass # test to see if one of your friends owns this
+def retrieve_venue(venue):
+  existing_venue = db.venues.find_one({"foursquare_id": venue['id']})
+  if existing_venue:
+    return existing_venue['_id']
   else:
-    pass # create the venue, mark for sale
+    id = db.venues.insert({"foursquare_id": venue['id'],
+                           "foursquare_name": venue['name']})
+    return id
 
 
 application = app
