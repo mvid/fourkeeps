@@ -2,8 +2,8 @@ import logging
 from os import environ
 
 import bottle
-from pymongo import MongoClient
 import requests
+from services.mongo import db
 
 app = bottle.Bottle()
 
@@ -22,8 +22,6 @@ def oauth_endpoint():
   user_request = requests.get("https://api.foursquare.com/v2/users/self", params={"oauth_token": token})
   user = user_request.json()['response']['user']
 
-  connection = MongoClient(environ.get("MONGO_HOST", "localhost"), environ.get("MONGO_PORT", 27017))
-  db = connection.fourkeeps
   users = db.users
   users.insert({"foursquare_token": token,
                 "foursquare_id": user['id'],
@@ -42,6 +40,12 @@ def handle_checkin():
   logging.info("user %s venue %s", user_id, venue_id)
 
 def retrieve_venue(venue_id):
-  pass
+
+  venue = db.venues.find_one({"foursquare_id": venue_id})
+  if venue:
+    pass # test to see if one of your friends owns this
+  else:
+    pass # create the venue, mark for sale
+
 
 application = app
