@@ -41,4 +41,8 @@ def handle_checkin():
 
   logging.info("user %s venue %s", user_id, venue_id)
 
+def retrieve_venue(venue_id):
+  pass
+
 application = app
+
