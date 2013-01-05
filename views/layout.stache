@@ -1,13 +1,20 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <script src="/assets/css/site.css" type="text/css"></script>
+    <link href='http://fonts.googleapis.com/css?family=Monda:700' rel='stylesheet' type='text/css'>
+    <link href="/assets/css/site.css" rel="stylesheet" type="text/css">
   </head>
   <body>
-    <p>
-      <h1>FourKeeps</h1>
-    </p>
-    {{page}}
+    <div class="layout">
+      <div class="header">
+        <p>
+          <h1>FourKeeps</h1>
+        </p>
+      </div>
+      <div class="container">
+        {{page}}
+      </div>
+    </div>
   </body>
 </html>
 
