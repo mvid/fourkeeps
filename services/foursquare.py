@@ -74,6 +74,9 @@ def handle_checkin():
       note = "Rent on %s" % checkin['venue']['name']
       venmo_url = "https://venmo.com/?txn=charge&amount=%s&note=%s&recipients=%s" % (RENT_COST, note, contact_method)
       write_to_checkin(checkin['id'], user, "Pay rent!", venmo_url)
+    else:
+      note = "The landlord didn't leave any contact info. You got lucky."
+      write_to_checkin(checkin['id'], user, note)
 
 def write_to_checkin(checkin_id, user, text, url=None):
   payload = {"text": text,
