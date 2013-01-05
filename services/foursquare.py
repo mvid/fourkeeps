@@ -22,5 +22,10 @@ def oauth_endpoint():
   user = user_request.json['response']['user']
 
   connection = MongoClient(environ.get("MONGO_HOST", ""), environ.get("MONGO_PORT", 27017))
+  db = connection.fourkeeps
+  users = db.users
+  users.insert({"foursquare_token": token,
+                "foursquare_id": user['id'],
+                "foursquare_contact": user['contact']})
 
 application = app
