@@ -1,4 +1,3 @@
-import logging
 from os import environ
 
 import bottle
@@ -7,6 +6,8 @@ from services.mongo import db
 import json
 from util import views
 from pymongo import objectid
+
+RENT_COST = "0.05"
 
 app = bottle.Bottle()
 
@@ -75,7 +76,7 @@ def handle_checkin():
     contact_method = contact_info.get('email') or contact_info.get("phone") or None
     if contact_method:
       note = "Rent on %s" % checkin['venue']['name']
-      venmo_url = "https://venmo.com/?txn=charge&amount=%s&note=%s&recipients=%s" % ("0.05", note, contact_method)
+      venmo_url = "https://venmo.com/?txn=charge&amount=%s&note=%s&recipients=%s" % (RENT_COST, note, contact_method)
       write_to_checkin(checkin['id'], user, "Pay rent!", venmo_url)
 
 def write_to_checkin(checkin_id, user, text, url=None):
