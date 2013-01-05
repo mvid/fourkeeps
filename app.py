@@ -1,18 +1,13 @@
 import bottle
 import os
 from services import foursquare
-import pystache
+from util import views
 
 app = bottle.Bottle()
-views = {}
-
-def render_view(view, data):
-  data = pystache.render(views[view], data)
-  return pystache.render(views['layout'], {'page': unicode(data)})
 
 @app.route('/')
 def index():
-  return render_view('index', {
+  return views.render_view('index', {
     'client_id': os.environ['FOURSQUARE_CLIENT_ID'],
     'redirect_uri': os.environ['FOURSQUARE_REDIRECT_URI']
     })
@@ -24,15 +19,6 @@ def privacy():
 @app.route('/assets/<path:path>')
 def static(path):
   return bottle.static_file(path, 'assets/')
-
-# Precompile templates
-for (dirpath, _, filenames) in os.walk('views'):
-  for fname in filenames:
-    path = dirpath + '/' + fname
-    view = open(path, 'r').read()
-    name = path[6:]
-    if name.endswith('.stache'): name = name[0:len(name)-7]
-    views[name] = pystache.parse(unicode(view))
 
 # service points
 app.mount("/foursquare", foursquare.application)

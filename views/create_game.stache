@@ -1,0 +1,23 @@
+<p>
+  <h3>Thanks, {{name}}</h3>
+</p>
+
+<p>
+  <strong>It appears as though you're not in a game yet!</strong>
+</p>
+<p>
+
+<p>
+  TOTALLY COOL, THOUGH. WE MADE ONE FOR YOU. To let your friends join, hit 'em with this link:
+</p>
+
+<p>
+  <code>
+    http://{{{base_url}}}/join_game/{{{game_id}}}
+  </code>
+</p>
+
+<p>
+  Remember, we think you're awesome.
+</p>
+
