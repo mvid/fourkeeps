@@ -1,4 +1,3 @@
-import logging
 from os import environ
 
 import bottle
@@ -106,7 +105,7 @@ def write_to_checkin(checkin_id, user, text, url=None):
              "oauth_token": user['foursquare_token']}
   response = requests.post("https://api.foursquare.com/v2/checkins/%s/reply" % checkin_id,
                           params=payload)
-  logging.info(response.text)
+  print response.url, response.text
   return response
 
 def retrieve_venue(venue):
