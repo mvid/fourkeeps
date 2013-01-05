@@ -20,6 +20,13 @@ def privacy():
 def static(path):
   return bottle.static_file(path, 'assets/')
 
+@app.get('/join_game/<game_id>')
+def join_game(game_id):
+  return views.render_view('index', {
+    'client_id': os.environ['FOURSQUARE_CLIENT_ID'],
+    'redirect_uri': os.environ['FOURSQUARE_REDIRECT_URI'] + '?game_id=' + game_id
+    })
+
 # service points
 app.mount("/foursquare", foursquare.application)
 

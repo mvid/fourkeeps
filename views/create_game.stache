@@ -13,11 +13,13 @@
 
 <p>
   <code>
-    http://{{{base_url}}}/join_game/{{{game_id}}}
+    {{{base_url}}}/join_game/{{{game_id}}}
   </code>
 </p>
 
 <p>
-  Remember, we think you're awesome.
+What's that? Your friends already have a game going? Ask them for their game link, follow it and we'll set you up. 
+Be aware, this will clear your existing progress. 
+Remember, we think you're awesome.
 </p>
 
