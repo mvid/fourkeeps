@@ -11,12 +11,14 @@ body {
 div.layout {
   width: 700px;
   font-family: 'Monda', sans-serif;
-  background-color: rgba(250, 250, 250, 0.9);
+  background-color: rgba(250, 250, 250, 0.7);
   margin: 10px auto;
   padding: 10px; 
+  border-radius: 5px;
 }
 
 div.header h1 {
+  margin: none;
   font-size: 50pt;
 }
 
