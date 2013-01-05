@@ -43,3 +43,4 @@ venv
 # custom
 runapp
 .DS_Store
+simulate_post
