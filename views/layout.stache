@@ -4,6 +4,10 @@
     <script src="/assets/css/site.css" type="text/css"></script>
   </head>
   <body>
+    <p>
+      <h1>FourKeeps</h1>
+    </p>
+    {{page}}
   </body>
 </html>
 
