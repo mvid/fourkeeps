@@ -8,11 +8,14 @@ views = {}
 
 def render_view(view, data):
   data = pystache.render(views[view], data)
-  return pystache.render(views['layout'], {'page': data})
+  return pystache.render(views['layout'], {'page': unicode(data)})
 
 @app.route('/')
 def index():
-  return render_view('index', {})
+  return render_view('index', {
+    'client_id': os.environ['FOURSQUARE_CLIENT_ID'],
+    'redirect_uri': os.environ['FOURSQUARE_REDIRECT_URI']
+    })
 
 @app.get('/privacy')
 def privacy():

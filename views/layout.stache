@@ -12,7 +12,7 @@
         </p>
       </div>
       <div class="container">
-        {{page}}
+        {{{page}}}
       </div>
     </div>
   </body>
