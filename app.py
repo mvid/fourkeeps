@@ -1,6 +1,6 @@
 import bottle
 import os
-from services import venmo, foursquare
+from services import foursquare
 
 app = bottle.Bottle()
 
@@ -16,8 +16,9 @@ def privacy():
 def static(path):
   return bottle.static_file(path, 'assets/')
 
-app.mount("/venmo", venmo.application)
 app.mount("/foursquare", foursquare.application)
+
+bottle.debug()
 
 port = os.environ.get('PORT', '3000')
 app.run(host='0.0.0.0', port=port)
