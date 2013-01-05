@@ -13,6 +13,14 @@ app = bottle.Bottle()
 @app.get("/")
 def oauth_endpoint():
   code = bottle.request.query['code']
+  game_id = bottle.request.query.get('game_id')
+  game_found = True
+  if not game_id:
+    game_id = bson.ObjectId()
+    game_found = False
+  else:
+    game_id = bson.ObjectId(game_id)
+
   token_request = requests.get("https://foursquare.com/oauth2/access_token",
                       params={"client_id": environ['FOURSQUARE_CLIENT_ID'],
                               "client_secret": environ['FOURSQUARE_CLIENT_SECRET'],
@@ -29,16 +37,22 @@ def oauth_endpoint():
                              "foursquare_id": user['id'],
                              "name": user['firstName'] + ' ' + user['lastName'],
                              "foursquare_contact": user['contact'],
+                             "game_id": game_id,
                              "owned_venue_ids": []})
 
   # Make a new game
-  game_id = bson.ObjectId()
-  db.users.update({'_id': user_id}, {'$set': {'game_id': game_id}})
-  return views.render_view('create_game', {
-    'name': user['firstName'],
-    'game_id': str(game_id),
-    'base_url': environ['BASE_URL']
-    })
+  if game_found:
+    friends = db.users.find({'game_id': game_id}, fields=['name'])
+    return views.render_view('thanks', {
+      'name': user['firstName'],
+      'users': friends
+      })
+  else:
+    return views.render_view('create_game', {
+      'name': user['firstName'],
+      'game_id': str(game_id),
+      'base_url': environ['BASE_URL']
+      })
 
 def fetch_game_for_user(user_id):
   return db.games.find_one({'user_ids': user_id})

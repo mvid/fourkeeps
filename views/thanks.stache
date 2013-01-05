@@ -6,11 +6,9 @@
   <strong>You're in a game with:</strong>
 </p>
 
-<table>
+<ul>
   {{#users}}
-    <tr>
-      <td>{{name}}</td>
-    </tr>
+    <li>{{name}}</li>
   {{/users}}
-</table>
+</ul>
 
