@@ -22,6 +22,7 @@ def privacy():
 def static(path):
   return bottle.static_file(path, 'assets/')
 
+# Precompile templates
 for (dirpath, _, filenames) in os.walk('views'):
   for fname in filenames:
     path = dirpath + '/' + fname
