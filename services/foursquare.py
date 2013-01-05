@@ -1,3 +1,4 @@
+import logging
 from os import environ
 
 import bottle
@@ -99,10 +100,10 @@ def write_to_checkin(checkin_id, user, text, url=None):
   payload = {"text": text,
              "url": url,
              "oauth_token": user['foursquare_token']}
-  if url:
-    payload['url'] = url
-  return requests.post("https://api.foursquare.com/v2/checkins/%s/reply" % checkin_id,
-                       params=payload)
+  response = requests.post("https://api.foursquare.com/v2/checkins/%s/reply" % checkin_id,
+                          params=payload)
+  logging.info(response.text)
+  return response
 
 def retrieve_venue(venue):
   existing_venue = db.venues.find_one({"foursquare_id": venue['id']})
