@@ -8,6 +8,7 @@ if mongo_uri:
   parsed = urlparse(mongo_uri)
   connection = MongoClient(mongo_uri)
   db = connection[parsed.path]
+  db.authenticate(parsed.username, parsed.password)
 else:
   connection = MongoClient()
   db = connection.fourkeeps
