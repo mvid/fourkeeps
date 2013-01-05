@@ -7,7 +7,7 @@ app = bottle.Bottle()
 views = {}
 
 def render_view(view, data):
-  data = pystache.render(view, data)
+  data = pystache.render(views[view], data)
   return pystache.render(views['layout'], {'page': data})
 
 @app.route('/')
