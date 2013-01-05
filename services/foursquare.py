@@ -17,10 +17,10 @@ def oauth_endpoint():
                               "redirect_uri": environ['FOURSQUARE_REDIRECT_URI'],
                               "code": code})
 
-  token = token_request.json['token']
+  token = token_request.json()['token']
 
   user_request = requests.get("https://api.foursquare.com/v2/users/self", params={"oauth_token": token})
-  user = user_request.json['response']['user']
+  user = user_request.json()['response']['user']
 
   connection = MongoClient(environ.get("MONGO_HOST", ""), environ.get("MONGO_PORT", 27017))
   db = connection.fourkeeps
