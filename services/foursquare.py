@@ -39,11 +39,34 @@ def handle_checkin():
   foursquare_user = checkin['user']
   foursquare_venue = checkin['venue']
 
+  user = db.users.find_one({"foursquare_id": foursquare_user['id']})
+  assert user
+  if not user.get('game_id'):
+    return # no game assigned to user
 
+  retrieved_venue_id = retrieve_venue(foursquare_venue)
+  owner = venue_owner(user['game_id'], retrieved_venue_id)
 
-  retrieved_venue = retrieve_venue(foursquare_venue)
-  owner = venue_owner()
+  if not owner:
+    user['owned_venue_ids'].append(retrieved_venue_id)
+    db.users.save(user)
+    write_to_checkin(checkin['id'], user, "You just bought a venue!")
+  else:
+    contact_info = owner['foursquare_contact']
+    contact_method = contact_info.get('email') or contact_info.get("phone") or None
+    if contact_method:
+      note = "Rent on %s" % checkin['venue']['name']
+      venmo_url = "https://venmo.com/?txn=charge&amount=%s&note=%s&recipients=%s" % ("0.05", note, contact_method)
+      write_to_checkin(checkin['id'], user, "Pay rent!", venmo_url)
 
+def write_to_checkin(checkin_id, user, text, url=None):
+  payload = {"text": text,
+             "url": url,
+             "oauth_token": user['foursquare_token']}
+  if url:
+    payload['url'] = url
+  return requests.post("https://api.foursquare.com/v2/checkins/%s/reply" % checkin_id,
+                       params=payload)
 
 def retrieve_venue(venue):
   existing_venue = db.venues.find_one({"foursquare_id": venue['id']})
