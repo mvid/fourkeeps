@@ -62,7 +62,7 @@ def oauth_endpoint():
 
   # Make a new game
   if game_found:
-    db.users.update({'_id': user_id})
+    db.users.update({'_id': user_id}, {'$set': {'owned_venue_ids': [], 'game_id': game_id}})
     friends = db.users.find({'game_id': game_id}, fields=['name'])
     return views.render_view('thanks', {
       'name': user['firstName'],
