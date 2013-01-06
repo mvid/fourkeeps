@@ -4,6 +4,13 @@
   <a href="https://foursquare.com/oauth2/authenticate?client_id={{client_id}}&response_type=code&redirect_uri={{redirect_uri}}">New Game</a> (Warning, will wipe your stats!)
 </p>
 
+<p>
+  Invite someone to join your game:
+  <code>
+    {{{base_url}}}/join_game/{{{game_id}}}
+  </code>
+</p>
+
 <table>
   <thead>
     <th>Name</th>
