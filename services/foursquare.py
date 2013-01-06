@@ -9,7 +9,7 @@ import bson
 from urllib import quote
 import itertools
 
-RENT_COST = "0.05"
+RENT_COST = "5.00"
 
 app = bottle.Bottle()
 
