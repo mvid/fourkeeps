@@ -1,2 +1,7 @@
+<p>
+  Real life Monopoly between friends. Bring the emotions of Monopoly to everyday life.<br>
+  Friends can join games, where they capture venues and charge rent when other members of their game checkin at those locations.
+</p>
+
 <a href="https://foursquare.com/oauth2/authenticate?client_id={{client_id}}&response_type=code&redirect_uri={{redirect_uri}}">Connect, you fool!</a>
 
