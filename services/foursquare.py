@@ -64,6 +64,7 @@ def oauth_endpoint():
 
   if game_found:
     print "IN CHANGE GAME PATH"
+    if mongo_user: user_id = mongo_user['_id']
     db.users.update({'_id': user_id}, {'$set': {'owned_venue_ids': [], 'game_id': game_id}})
     friends = db.users.find({'game_id': game_id}, fields=['name'])
     return views.render_view('thanks', {
