@@ -52,7 +52,7 @@ def oauth_endpoint():
                                "owned_venue_ids": []})
   elif new_game:
     mongo_user['owned_venue_ids'] = []
-    mongo_user['game_id'] = ObjectId()
+    mongo_user['game_id'] = bson.ObjectId()
     db.users.save(mongo_user)
     return views.render_view('create_game', {
       'name': mongo_user['name'],
