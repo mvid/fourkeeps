@@ -97,12 +97,13 @@ def show_dashboard_for_user(user):
       }
     data.append(obj)
 
-  print data
   redirect_uri = quote(environ['FOURSQUARE_REDIRECT_URI'] + '?new_game=1')
   return views.render_view('dashboard', {
     'data': data,
     'client_id': environ['FOURSQUARE_CLIENT_ID'],
-    'redirect_uri': redirect_uri
+    'redirect_uri': redirect_uri,
+    'base_url': environ['BASE_URL'],
+    'game_id': str(user['game_id'])
     })
 
 def fetch_game_for_user(user_id):
