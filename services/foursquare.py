@@ -6,6 +6,7 @@ from services.mongo import db
 import json
 from util import views
 import bson
+from urllib import quote
 
 RENT_COST = "0.05"
 
@@ -93,7 +94,7 @@ def handle_checkin():
     contact_method = contact_info.get('email') or contact_info.get("phone") or None
     if contact_method:
       note = "Rent on %s" % checkin['venue']['name']
-      venmo_url = "https://venmo.com/?txn=charge&amount=%s&note=%s&recipients=%s" % (RENT_COST, note, contact_method)
+      venmo_url = "https://venmo.com/?txn=charge&amount=%s&note=%s&recipients=%s" % (RENT_COST, quote(note), contact_method)
       write_to_checkin(checkin['id'], user, "Pay rent!", venmo_url)
     else:
       note = "The landlord didn't leave any contact info. You got lucky."
