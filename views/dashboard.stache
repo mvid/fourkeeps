@@ -1,0 +1,16 @@
+<h3>Your game</h3>
+
+<table>
+  <thead>
+    <th>Name</th>
+    <th>Venues Owned</th>
+  </thead>
+  {{#data}}
+    <tr>
+      <td>{{name}}</td>
+      <td>{{venues}}</td>
+    </tr>
+  {{/data}}
+</table>
+
+

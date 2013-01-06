@@ -7,6 +7,7 @@ import json
 from util import views
 import bson
 from urllib import quote
+import itertools
 
 RENT_COST = "0.05"
 
@@ -39,29 +40,48 @@ def oauth_endpoint():
   user = user_request.json()['response']['user']
 
   user_id = None
-  if not db.users.find_one({"foursquare_id": user['id']}):
+  mongo_user = db.users.find_one({"foursquare_id": user['id']})
+  if not mongo_user:
     user_id = db.users.insert({"foursquare_token": token,
                                "foursquare_id": user['id'],
                                "name": user['firstName'] + ' ' + user['lastName'],
                                "foursquare_contact": user['contact'],
                                "game_id": game_id,
                                "owned_venue_ids": []})
-  else:
-    return views.render_view('error', {'error': 'User already exists!'})
 
   # Make a new game
   if game_found:
+    db.users.update({'_id': user_id})
     friends = db.users.find({'game_id': game_id}, fields=['name'])
     return views.render_view('thanks', {
       'name': user['firstName'],
       'users': friends
       })
+  elif mongo_user:
+    return show_dashboard_for_user(mongo_user)
   else:
     return views.render_view('create_game', {
       'name': user['firstName'],
       'game_id': str(game_id),
       'base_url': environ['BASE_URL']
       })
+
+def show_dashboard_for_user(user):
+  friends = db.users.find({'game_id': user['game_id']})
+  venues = list(itertools.chain(*map(lambda x: x['owned_venue_ids'], friends)))
+  venues = db.venues.find({'_id': {'$in': venues}})
+  venues_by_id = {}
+  for venue in venues:
+    venues_by_id[venue['_id']] = venue
+  data = []
+  for friend in friends:
+    obj = {
+      'name': friend['name'],
+      'venues': ", ".join(map(lambda x: venues_by_id[x]['foursquare_name'], friend['owned_venue_ids']))
+      }
+    data.append(obj)
+
+  return views.render_view('dashboard', {'data': data})
 
 def fetch_game_for_user(user_id):
   return db.games.find_one({'user_ids': user_id})
@@ -107,7 +127,6 @@ def write_to_checkin(checkin_id, user, text, url=None):
              "v": "20130105"}
   response = requests.post("https://api.foursquare.com/v2/checkins/%s/reply" % checkin_id,
                           params=payload)
-  print response.url, response.text
   return response
 
 def retrieve_venue(venue):
