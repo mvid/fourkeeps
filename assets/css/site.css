@@ -8,6 +8,10 @@ body {
   background-color: rgba(210, 210, 210, 0.9);
 }
 
+table {
+  border: 1px solid black;
+}
+
 div.layout {
   width: 700px;
   font-family: 'Monda', sans-serif;

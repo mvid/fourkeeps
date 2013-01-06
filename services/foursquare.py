@@ -24,6 +24,8 @@ def oauth_endpoint():
   else:
     game_id = bson.ObjectId(game_id)
 
+  new_game = bottle.request.query.get('new_game')
+
   token_request = requests.get("https://foursquare.com/oauth2/access_token",
                       params={"client_id": environ['FOURSQUARE_CLIENT_ID'],
                               "client_secret": environ['FOURSQUARE_CLIENT_SECRET'],
@@ -48,6 +50,15 @@ def oauth_endpoint():
                                "foursquare_contact": user['contact'],
                                "game_id": game_id,
                                "owned_venue_ids": []})
+  elif new_game:
+    mongo_user['owned_venue_ids'] = []
+    mongo_user['game_id'] = ObjectId()
+    db.users.save(mongo_user)
+    return views.render_view('create_game', {
+      'name': mongo_user['name'],
+      'base_url': environ['BASE_URL'],
+      'game_id': str(mongo_user['game_id'])
+      })
 
   # Make a new game
   if game_found:
@@ -82,7 +93,12 @@ def show_dashboard_for_user(user):
     data.append(obj)
 
   print data
-  return views.render_view('dashboard', {'data': data})
+  redirect_uri = quote(environ['FOURSQUARE_REDIRECT_URI'] + '?new_game=1')
+  return views.render_view('dashboard', {
+    'data': data,
+    'client_id': environ['FOURSQUARE_CLIENT_ID'],
+    'redirect_uri': redirect_uri
+    })
 
 def fetch_game_for_user(user_id):
   return db.games.find_one({'user_ids': user_id})

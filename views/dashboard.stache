@@ -1,5 +1,9 @@
 <h3>Your game</h3>
 
+<p>
+  <a href="https://foursquare.com/oauth2/authenticate?client_id={{client_id}}&response_type=code&redirect_uri={{redirect_uri}}">New Game</a> (Warning, will wipe your stats!)
+</p>
+
 <table>
   <thead>
     <th>Name</th>

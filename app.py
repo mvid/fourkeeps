@@ -1,8 +1,10 @@
 import bottle
 import os
 from services import foursquare
+from services.mongo import db
 from util import views
 from urllib import quote
+from bson import ObjectId
 
 app = bottle.Bottle()
 
