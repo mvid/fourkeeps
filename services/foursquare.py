@@ -67,7 +67,7 @@ def oauth_endpoint():
       })
 
 def show_dashboard_for_user(user):
-  friends = db.users.find({'game_id': user['game_id']})
+  friends = list(db.users.find({'game_id': user['game_id']}))
   venues = list(itertools.chain(*map(lambda x: x['owned_venue_ids'], friends)))
   venues = db.venues.find({'_id': {'$in': venues}})
   venues_by_id = {}
@@ -81,6 +81,7 @@ def show_dashboard_for_user(user):
       }
     data.append(obj)
 
+  print data
   return views.render_view('dashboard', {'data': data})
 
 def fetch_game_for_user(user_id):
