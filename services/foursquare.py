@@ -44,6 +44,7 @@ def oauth_endpoint():
   user_id = None
   mongo_user = db.users.find_one({"foursquare_id": user['id']})
   if not mongo_user:
+    print "IN NEW USER PATH"
     user_id = db.users.insert({"foursquare_token": token,
                                "foursquare_id": user['id'],
                                "name": user['firstName'] + ' ' + user['lastName'],
@@ -51,6 +52,7 @@ def oauth_endpoint():
                                "game_id": game_id,
                                "owned_venue_ids": []})
   elif new_game:
+    print "IN NEW GAME PATH"
     mongo_user['owned_venue_ids'] = []
     mongo_user['game_id'] = bson.ObjectId()
     db.users.save(mongo_user)
@@ -60,8 +62,8 @@ def oauth_endpoint():
       'game_id': str(mongo_user['game_id'])
       })
 
-  # Make a new game
   if game_found:
+    print "IN CHANGE GAME PATH"
     db.users.update({'_id': user_id}, {'$set': {'owned_venue_ids': [], 'game_id': game_id}})
     friends = db.users.find({'game_id': game_id}, fields=['name'])
     return views.render_view('thanks', {
@@ -69,8 +71,10 @@ def oauth_endpoint():
       'users': friends
       })
   elif mongo_user:
+    print "IN DASHBOARD PATH"
     return show_dashboard_for_user(mongo_user)
   else:
+    print "IN NEW USER NEW GAME PATH"
     return views.render_view('create_game', {
       'name': user['firstName'],
       'game_id': str(game_id),
